@@ -1,5 +1,8 @@
 import './style.css'
 import * as THREE from 'three';
+import moonJpg from './src/images/moon.jpg'
+import earthJpg from './src/images/earth.jpg'
+import bgJpg from './src/images/space.jpg'
 
 // importing orbit control
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
@@ -35,8 +38,8 @@ const torus = new THREE.Mesh(geometry, material);
 // scene.add(torus);
 
 // Adding Moon
-const moonTexture = new THREE.TextureLoader().load('./src/images/moon.jpg');
-const earthTexture = new THREE.TextureLoader().load('./src/images/earth.jpg');
+const moonTexture = new THREE.TextureLoader().load(moonJpg);
+const earthTexture = new THREE.TextureLoader().load(earthJpg);
 const moon = new THREE.Mesh(
   new THREE.SphereGeometry(2.5, 32, 32),
   new THREE.MeshStandardMaterial({
@@ -109,7 +112,7 @@ function addStars() {
 //Creating an array of 200 values and call the addStar for each
 Array(200).fill().forEach(addStars);
 
-const spaceTexture = new THREE.TextureLoader().load('./src/images/space.jpg');
+const spaceTexture = new THREE.TextureLoader().load(bgJpg);
 scene.background = spaceTexture;
 
 
