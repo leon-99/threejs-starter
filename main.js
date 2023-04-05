@@ -10,6 +10,16 @@ import moonBumpsJpg from './src/images/moon-bumps.jpg';
 // importing orbit control
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
+let canvas = document.querySelector('canvas');
+let loading = document.querySelector('#loading');
+
+function hideLoading() {
+  canvas.style.visibility = 'visible';
+  loading.style.visibility = 'hidden';
+}
+
+setInterval(hideLoading, 2000);
+
 // setting scene
 const scene = new THREE.Scene();
 
@@ -122,7 +132,7 @@ function animate() {
   torus.rotation.x += 0.01;
   torus.rotation.y += 0.005;
   torus.rotation.z += 0.01;
-  earth.rotation.y += 0.005;
+  earth.rotation.y += 0.002;
   moon.rotation.y += 0.001;
 
   //to sync the scene with the current state of the orbit control.
