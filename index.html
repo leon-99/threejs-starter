@@ -36,5 +36,16 @@
     </div>
     <canvas id="bg"></canvas>
     <script type="module" src="/main.js"></script>
+    <script>
+      // loading function
+      let canvas = document.querySelector("canvas");
+      let loading = document.querySelector("#loading");
+      function hideLoading() {
+        canvas.style.visibility = "visible";
+        loading.style.visibility = "hidden";
+      }
+
+      setInterval(hideLoading, 1);
+    </script>
   </body>
 </html>
