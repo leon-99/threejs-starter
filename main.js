@@ -8,13 +8,16 @@ import venusImgUrl from './src/images/venus.jpg';
 import marsImgUrl from './src/images/mars.jpg';
 import jupiterImgUrl from './src/images/jupiter.jpeg';
 import saturnImgUrl from './src/images/saturn.jpg';
+import saturnRingUrl from './src/images/saturn-ring.png';
 import uranusImgUrl from './src/images/uranus.jpeg';
 import naptuneImgUrl from './src/images/naptune.jpeg';
 import bgJpg from './src/images/space.jpg';
 import moonImgUrl from './src/images/moon.jpg';
 import moonBumpsImgUrl from './src/images/moon-bumps.jpg';
 
-import data from './data-values';
+const textureLoader = new THREE.TextureLoader();
+
+
 
 // importing orbit control
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -27,7 +30,7 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 // open shadows for renender, default is false
-renderer.shadowMap.enabled  = true;
+renderer.shadowMap.enabled = true;
 
 // setting scene
 const scene = new THREE.Scene();
@@ -39,14 +42,13 @@ scene.background = spaceTexture;
 
 // setting up the camera
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(...data.values.PerspectiveCameraPosition)
+camera.position.set(0, 150, 600)
 
 // Adding lighting
 
 // point light is like a light bulb, it spreads the light in all directions.
 const pointLight = new THREE.PointLight(0xffe87c);
 pointLight.intensity = 2;
-pointLight.position.set(...data.values.sunPosition);
 
 
 // setting point light as the shadow source
@@ -59,160 +61,54 @@ scene.add(pointLight);
 
 // adding the sun
 const sunTexture = new THREE.TextureLoader().load(sunImgUrl);
-const sunGravityObj = new THREE.Object3D();
+// const sunGravityObj = new THREE.Object3D();
 const sun = new THREE.Mesh(
-  new THREE.SphereGeometry(50, 32, 32),
+  new THREE.SphereGeometry(50, 32, 20),
   new THREE.MeshBasicMaterial({
     map: sunTexture
   })
 )
-scene.add(sun, sunGravityObj);
+scene.add(sun);
 
+// create planets
+function createPlanet(size, texture, position, ring) {
+  const geo = new THREE.SphereGeometry(size, 30, 30);
+  const mat = new THREE.MeshStandardMaterial({
+    map: textureLoader.load(texture)
+  });
 
+  const mesh = new THREE.Mesh(geo, mat);
+  const obj = new THREE.Object3D();
+  obj.add(mesh);
+  if (ring) {
+    const ringMesh = new THREE.Mesh(
+      new THREE.RingGeometry(ring.innerRadius, ring.outerRadius, 32),
+      new THREE.MeshBasicMaterial({
+        map: textureLoader.load(ring.texture),
+        side: THREE.DoubleSide
+      })
+    );
+    ringMesh.position.x = position;
+    ringMesh.rotation.x = -0.5 * Math.PI;
+    obj.add(ringMesh);
+  }
+  scene.add(obj);
+  mesh.position.x = position
+  return { mesh, obj };
+}
 
-// Adding Marcury
-const marcuryTexture = new THREE.TextureLoader().load(mercuryImgUrl);
-const marcuryGravityObj = new THREE.Object3D();
-const marcury = new THREE.Mesh(
-  new THREE.SphereGeometry(3, 10, 10),
-  new THREE.MeshStandardMaterial({
-    map: marcuryTexture
-  })
-)
-scene.add(marcuryGravityObj);
-marcury.position.set(...data.values.marcuryPosition);
-// setting earth as an object that casts shadow
-marcury.castShadow = true;
-marcuryGravityObj.add(marcury);
-
-// Adding venus
-const venusTexture = new THREE.TextureLoader().load(venusImgUrl);
-const venusGravityObj = new THREE.Object3D();
-const venus = new THREE.Mesh(
-  new THREE.SphereGeometry(5, 32, 32),
-  new THREE.MeshStandardMaterial({
-    map: venusTexture
-  })
-)
-scene.add(venusGravityObj);
-venus.position.set(...data.values.venusPosition);
-// setting earth as an object that casts shadow
-venus.castShadow = true;
-venusGravityObj.add(venus);
-
-// Adding earth
-const earthTexture = new THREE.TextureLoader().load(earthImgUrl);
-const earthBumps = new THREE.TextureLoader().load(earthBumpsImgUrl);
-const earthGravityObj = new THREE.Object3D();
-const earth = new THREE.Mesh(
-  new THREE.SphereGeometry(5, 32, 32),
-  new THREE.MeshStandardMaterial({
-    map: earthTexture,
-    normalMap: earthBumps
-  })
-)
-scene.add(earthGravityObj);
-earth.position.set(...data.values.earthPosition);
-// setting earth as an object that casts shadow
-earth.castShadow = true;
-earthGravityObj.add(earth);
-
-// Adding mars
-const marsTexture = new THREE.TextureLoader().load(marsImgUrl);
-const marsGravityObj = new THREE.Object3D();
-const mars = new THREE.Mesh(
-  new THREE.SphereGeometry(5, 32, 32),
-  new THREE.MeshStandardMaterial({
-    map: marsTexture
-  })
-)
-scene.add(marsGravityObj);
-mars.position.set(...data.values.marsPosition);
-// setting earth as an object that casts shadow
-mars.castShadow = true;
-marsGravityObj.add(mars);
-
-// Adding jupiter
-const jupiterTexture = new THREE.TextureLoader().load(jupiterImgUrl);
-const jupiterGravityObj = new THREE.Object3D();
-const jupiter = new THREE.Mesh(
-  new THREE.SphereGeometry(15, 32, 32),
-  new THREE.MeshStandardMaterial({
-    map: jupiterTexture
-  })
-)
-scene.add(jupiterGravityObj);
-jupiter.position.set(...data.values.jupiterPosition);
-// setting earth as an object that casts shadow
-jupiter.castShadow = true;
-jupiterGravityObj.add(jupiter);
-
-// Adding Saturn
-const saturnTexture = new THREE.TextureLoader().load(saturnImgUrl);
-const saturnGravityObj = new THREE.Object3D();
-const saturn = new THREE.Mesh(
-  new THREE.SphereGeometry(15, 32, 32),
-  new THREE.MeshStandardMaterial({
-    map: saturnTexture
-  })
-)
-scene.add(saturnGravityObj);
-saturn.position.set(...data.values.saturnPosition);
-// setting earth as an object that casts shadow
-saturn.castShadow = true;
-saturnGravityObj.add(saturn);
-
-// Adding Uranus
-const uranusTexture = new THREE.TextureLoader().load(uranusImgUrl);
-const uranusGravityObj = new THREE.Object3D();
-const uranus = new THREE.Mesh(
-  new THREE.SphereGeometry(10, 32, 32),
-  new THREE.MeshStandardMaterial({
-    map: uranusTexture
-  })
-)
-scene.add(uranusGravityObj);
-uranus.position.set(...data.values.uranusPosition);
-// setting earth as an object that casts shadow
-uranus.castShadow = true;
-uranusGravityObj.add(uranus);
-
-// Adding Naptune
-const naptuneTexture = new THREE.TextureLoader().load(naptuneImgUrl);
-const naptuneGravityObj = new THREE.Object3D();
-const naptune = new THREE.Mesh(
-  new THREE.SphereGeometry(10, 32, 32),
-  new THREE.MeshStandardMaterial({
-    map: naptuneTexture
-  })
-)
-scene.add(naptuneGravityObj);
-naptune.position.set(...data.values.naptunePosition);
-// setting earth as an object that casts shadow
-naptune.castShadow = true;
-naptuneGravityObj.add(naptune);
-
-// Adding Moon
-// const moonTexture = new THREE.TextureLoader().load(moonImgUrl);
-// const moonBumps = new THREE.TextureLoader().load(moonBumpsImgUrl);
-// const moon = new THREE.Mesh(
-//   new THREE.SphereGeometry(2, 32, 32),
-//   new THREE.MeshStandardMaterial({
-//     map: moonTexture,
-//     normalMap: moonBumps
-//   })
-// )
-// // moon position
-// moon.position.set(10, 10, -20);
-// // setting moon as reciever of shadow
-// moon.receiveShadow = true;
-// earthGravityObj.add(moon);
-
-
-
-// add to scene
-// scene.add(earth, sun);
-
+const mercury = createPlanet(3, mercuryImgUrl, 80);
+const venus = createPlanet(5, venusImgUrl, 110);
+const earth = createPlanet(5, earthImgUrl, 140);
+const mars = createPlanet(5, marsImgUrl, 170);
+const jupiter = createPlanet(15, jupiterImgUrl, 210);
+const saturn = createPlanet(14, saturnImgUrl, 300, {
+  innerRadius: 18,
+  outerRadius: 30,
+  texture: saturnRingUrl
+});
+const uranus = createPlanet(10, uranusImgUrl, 340);
+const naptune = createPlanet(10, naptuneImgUrl, 370);
 
 
 //  Calling orbit control
@@ -221,14 +117,23 @@ const controls = new OrbitControls(camera, renderer.domElement);
 // Making recursive function to animate the object
 function animate() {
   requestAnimationFrame(animate);
-  marcuryGravityObj.rotation.y += 0.04;
-  venusGravityObj.rotation.y += 0.03;
-  marsGravityObj.rotation.y += 0.02;
-  earthGravityObj.rotation.y += 0.01;
-  jupiterGravityObj.rotation.y += 0.008;
-  saturnGravityObj.rotation.y += 0.007;
-  uranusGravityObj.rotation.y += 0.006;
-  naptuneGravityObj.rotation.y += 0.005;
+  mercury.obj.rotation.y += 0.04;
+  venus.obj.rotation.y += 0.03;
+  earth.obj.rotation.y += 0.02;
+  mars.obj.rotation.y += 0.01;
+  jupiter.obj.rotation.y += 0.008;
+  saturn.obj.rotation.y += 0.007;
+  uranus.obj.rotation.y += 0.006;
+  naptune.obj.rotation.y += 0.005;
+
+  mercury.mesh.rotation.y += 0.005;
+  venus.mesh.rotation.y += 0.005;
+  earth.mesh.rotation.y += 0.005;
+  mars.mesh.rotation.y += 0.005;
+  jupiter.mesh.rotation.y += 0.005;
+  saturn.mesh.rotation.y += 0.005;
+  uranus.mesh.rotation.y += 0.005;
+  naptune.mesh.rotation.y += 0.005;
 
   // earth.rotation.y += 0.002;
   // moon.rotation.y += 0.001;
@@ -239,30 +144,5 @@ function animate() {
   renderer.render(scene, camera);
 }
 animate();
-
-// Adding stars
-// function addStars() {
-//   const geometry = new THREE.SphereGeometry(0.25, 24, 24);
-//   const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
-//   const star = new THREE.Mesh(geometry, material);
-//   const [x, y, z] = Array(3).fill().map(() => THREE.MathUtils.randFloatSpread(100));
-//   star.position.set(x, y, z);
-//   scene.add(star);
-//   star.receiveShadow = true;
-// }
-
-//Creating an array of 200 values and call the addStar for each
-// Array(200).fill().forEach(addStars);
-
-// cube texture loader to set 3D background
-// const cubeTexture = new THREE.CubeTextureLoader.load([
-//   bgJpg,
-//   bgJpg,
-//   bgJpg,
-//   bgJpg,
-//   bgJpg,
-//   bgJpg
-// ]);
-// scene.background = cubeTexture;
 
 
