@@ -81,13 +81,12 @@ function createPlanet(size, texture, position, ring) {
   const obj = new THREE.Object3D();
   obj.add(mesh);
   if (ring) {
-    const ringMesh = new THREE.Mesh(
-      new THREE.RingGeometry(ring.innerRadius, ring.outerRadius, 32),
-      new THREE.MeshBasicMaterial({
-        map: textureLoader.load(ring.texture),
-        side: THREE.DoubleSide
-      })
-    );
+    const ringGeo = new THREE.RingGeometry(ring.innerRadius, ring.outerRadius, 32);
+    const ringMet = new THREE.MeshBasicMaterial({
+      map: textureLoader.load(ring.texture),
+      side: THREE.DoubleSide
+    });
+    const ringMesh = new THREE.Mesh(ringGeo, ringMet);
     ringMesh.position.x = position;
     ringMesh.rotation.x = -0.5 * Math.PI;
     obj.add(ringMesh);
@@ -117,14 +116,14 @@ const controls = new OrbitControls(camera, renderer.domElement);
 // Making recursive function to animate the object
 function animate() {
   requestAnimationFrame(animate);
-  mercury.obj.rotation.y += 0.04;
-  venus.obj.rotation.y += 0.03;
-  earth.obj.rotation.y += 0.02;
-  mars.obj.rotation.y += 0.01;
-  jupiter.obj.rotation.y += 0.008;
-  saturn.obj.rotation.y += 0.007;
-  uranus.obj.rotation.y += 0.006;
-  naptune.obj.rotation.y += 0.005;
+  mercury.obj.rotation.y += 0.011;
+  venus.obj.rotation.y += 0.010;
+  earth.obj.rotation.y += 0.009;
+  mars.obj.rotation.y += 0.008;
+  jupiter.obj.rotation.y += 0.007;
+  saturn.obj.rotation.y += 0.006;
+  uranus.obj.rotation.y += 0.005;
+  naptune.obj.rotation.y += 0.004;
 
   mercury.mesh.rotation.y += 0.005;
   venus.mesh.rotation.y += 0.005;
