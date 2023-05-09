@@ -11,6 +11,7 @@ import saturnImgUrl from './src/images/saturn.jpg';
 import saturnRingUrl from './src/images/saturn-ring.png';
 import uranusImgUrl from './src/images/uranus.jpeg';
 import naptuneImgUrl from './src/images/naptune.jpeg';
+// import naptuneRing from './src/images/naptune-ring.png';
 import bgJpg from './src/images/space.jpg';
 import moonImgUrl from './src/images/moon.jpg';
 import moonBumpsImgUrl from './src/images/moon-bumps.jpg';
@@ -133,10 +134,6 @@ function animate() {
   saturn.mesh.rotation.y += 0.005;
   uranus.mesh.rotation.y += 0.005;
   naptune.mesh.rotation.y += 0.005;
-
-  // earth.rotation.y += 0.002;
-  // moon.rotation.y += 0.001;
-
   //to sync the scene with the current state of the orbit control.
   controls.update();
 
