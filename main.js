@@ -11,7 +11,7 @@ import saturnImgUrl from './src/images/saturn.jpg';
 import saturnRingUrl from './src/images/saturn-ring.png';
 import uranusImgUrl from './src/images/uranus.jpeg';
 import naptuneImgUrl from './src/images/naptune.jpeg';
-// import naptuneRing from './src/images/naptune-ring.png';
+import naptuneRing from './src/images/neptune-rings.png';
 import bgJpg from './src/images/space.jpg';
 import moonImgUrl from './src/images/moon.jpg';
 import moonBumpsImgUrl from './src/images/moon-bumps.jpg';
@@ -108,7 +108,11 @@ const saturn = createPlanet(14, saturnImgUrl, 300, {
   texture: saturnRingUrl
 });
 const uranus = createPlanet(10, uranusImgUrl, 340);
-const naptune = createPlanet(10, naptuneImgUrl, 370);
+const naptune = createPlanet(10, naptuneImgUrl, 370, {
+  innerRadius: 10,
+  outerRadius: 20,
+  texture: naptuneRing
+});
 
 
 //  Calling orbit control
